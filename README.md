@@ -6,7 +6,7 @@ cd sim_and_reco_jobsubmission
 ```
 ### Prepare geometry and EICrecon
 
-This study was done with the nHCal only (without the magnet). The default epic/configurations/backward_hcal_only.yml has also magnet included so it needs to be modified (see epic/configurations/backward_hcal_only_womagnet.yml).
+This study was done with the nHCal only (without the magnet). The default ``` epic/configurations/backward_hcal_only.yml ```  has also magnet included so it needs to be modified (see ``` epic/configurations/backward_hcal_only_womagnet.yml ```).
 In ``` eic-shell ```
 ```bash
 git clone https://github.com/eic/epic.git
