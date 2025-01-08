@@ -1,40 +1,33 @@
-# ePIC_preTDR_nHCal_eh-ratio
+# ePIC_preTDR_nHCal_PosRes
+Repository for reproducing position resolution plots for ePIC preTDR nHCal 
+## Simulation and Reconstruction
+ ```bash
+cd sim_and_reco_jobsubmission
+```
+### Prepare geometry and EICrecon
 
-## e/h response
-
-### Run Simulation Jobs
-
+This study was done with the nHCal only (without the magnet). The default ``` epic/configurations/backward_hcal_only.yml ```  has also magnet included so it needs to be modified (see ``` epic/configurations/backward_hcal_only_womagnet.yml ```).
+In ``` eic-shell ```
 ```bash
-cd simjobsubmission
+git clone https://github.com/eic/epic.git
+cp backward_hcal_onlywoMagnet.yml epic/configurations/
+cd epic
+cmake -B build -S . -DCMAKE_INSTALL_PREFIX=install
+cmake --build build -- install -j4
+```
+This particular study was done with ``` eicrecon ``` with the commit-hash ``` 0e1566c91b04605618c4571e72c3cfba18b2cb11 ``` where the ClusterMCParticleAssociation was a one-to-one mapping between the nHCal cluster and the MC particle (meaning there was one MC particle associated to a cluster).
+```bash
+cd ../
+git clone https://github.com/eic/EICrecon.git
+git checkout 0e1566c91b04605618c4571e72c3cfba18b2cb11
+cd EICrecon
+cmake -B build -S . -DCMAKE_INSTALL_PREFIX=install
+cmake --build build -- install -j4
 ```
 
-use `./run.sh` on BNL-SDCC shell
-
-It will run multiple jobs with particle gun type and momentum specified - `particle_p_all.txt`, the execution script is defined in `runSimBatch.sh`.
-
-The analysis macro for filling hitograms with energy deposition is defined in `readHCalSimReader.C`. This macro is executed on Simulation output files.
-
-
-### Run local analysis
-
-After the jobs have finished one needs to merge the files.
-
+### Submit simulation and reconstruction jobs
 ```bash
-cd /parent/to/desired/outputdirectory/withparticleandmomentum (Outputdir = /gpfs/mnt/gpfs02/eic/palspeic/simdir/ebyh_response/Steel/ in submitSim.job)
-hadd -f output_e-_1GeV_hcal_only.root e-_1GeV_hcal_only/*
-hadd -f output_pi-_1GeV_hcal_only.root pi-_1GeV_hcal_only/*
-hadd -f output_e-_2GeV_hcal_only.root e-_2GeV_hcal_only/*
-hadd -f output_pi-_2GeV_hcal_only.root pi-_2GeV_hcal_only/*
+cd ../
+./run_all.sh
 ```
-and so on..
-
-change the names of the files in alphabetic order with increasing momentum (aoutput_e-_1GeV_hcal_only.root, boutput_e-_2GeV_hcal_only.root, aoutput_pi-_1GeV_hcal_only.root, boutput_pi-_2GeV_hcal_only.root, etc.)
-
-copy `output*hcal_only.root`s (1,2,5,10,20) to a directory named `high_energy`. 
-copy `ebyh_ana.C` to the parent directory of `high_energy`.
-One can further analyze it and plot energy deposition distribution, sampling fraction, etc. using `ebyh_ana.C ("particle species (e.g. e-)", "high_energy")`
-
-repeat the same procedure for pi-.
-
-copy `ebyh_ratio.C` to the parent directory of `high_energy`.
-run `ebyh_ratio.C` to get e/h ratio plot.
+This will run simulation and reconstruction jobs with neutron gun pointed at ``` theta = 155 degree ``` and  ``` phi = 45 degree ``` and pion gun pointed at theta value (in degrees) taken from the 2nd column of ``` pionangles.txt ``` and phi value (in degrees) from the 1st column. The corresponding simulation and reconstruction outputfiles will be stored in the ```Phi*Theta*``` directories created during the jobsubmission.
