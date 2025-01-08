@@ -25,4 +25,11 @@ cmake -B build -S . -DCMAKE_INSTALL_PREFIX=install
 cmake --build build -- install -j4
 ```
 
+### Submit simulation and reconstruction jobs
+```bash
+cd ../
+./run_all.sh
+```
+This will run simulation and reconstruction jobs with neutron gun pointed at ``` theta = 155 degree ``` and  ``` phi = 45 degree ``` and pion gun pointed at theta value (in degrees) taken from the 2nd column of ``` pionangles.txt ``` and phi value (in degrees) from the 1st column. The corresponding outputfiles will be stored in the ```Phi*Theta*``` directories created during the jobsubmission.
+
 
