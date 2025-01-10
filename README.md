@@ -26,7 +26,8 @@ cmake --build build -- install -j4
 ```
 
 ### Submit simulation and reconstruction jobs
-Outside ``` eic-shell ```  ```bash
+Outside ``` eic-shell ```  
+```bash
 cd ../
 ./run_all.sh
 ```
